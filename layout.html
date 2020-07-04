@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MixLab</title>
+  <style>
+    ul{
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .ai_animation{
+      animation: background_ani 0.2s infinite;
+      background: none;
+      border: none;
+      color:white
+    }
+
+    @keyframes background_ani{
+      0% {
+          background: yellow;
+      }
+      100% {
+          background: #3F51B5;
+      }
+    }
+
+
+    #news li{
+     
+    }
+    #news img{
+       
+    }
+    #news a{
+       
+    }
+    #news h5{
+      
+    }
+    #news p{
+      
+    }
+    body{
+      background-color: #eee;
+    }
+  </style>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/fingerprintjs2/2.1.0/fingerprint2.min.js"></script>
+</head>
+<body>
+  <header></header>
+  <main>
+    <div style="display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 44px;"><img id="headImage" style="width: 100%;
+    border: 4px solid white;
+    box-shadow: 1px 5px 13px 3px #80808059;
+    border-radius: 18px;"></div>
+    <ul id="news"></ul>
+  </main>
+  <footer></footer>
+  <script>
+
+    if (window.requestIdleCallback) {
+      requestIdleCallback(function () {
+          Fingerprint2.get(function (components) {
+            var values = components.map(function (component) { return component.value });
+            var murmur = Fingerprint2.x64hash128(values.join(''), 31);
+            console.log(murmur)
+          })
+        })
+    } else {
+        setTimeout(function () {
+            Fingerprint2.get(function (components) {
+              var values = components.map(function (component) { return component.value });
+              var murmur = Fingerprint2.x64hash128(values.join(''), 31);
+              console.log(murmur) 
+            })  
+        }, 500)
+    }
+
+  </script>
+  <script>
+
+  window.pageIndex=1;
+
+const styles={
+      type1:{
+        li:`margin: 44px 8px;
+            padding: 12px;
+            border-bottom: 2px solid #afe6ff;`,
+        a:`text-decoration:none;
+          `,
+        img:`width:98px;
+          padding: 8px;
+          background: white;
+          box-shadow: 1px 1px 18px #989ec1;`,
+        h5:`margin: 14px 0;
+            padding: 0;
+            color: #767790;
+            font-size: 18px;
+            font-weight: 400;
+            font-family: monospace;`,
+        p:`margin: 0;
+          padding: 0;
+          font-size: 14px;
+          font-weight: 300;
+          color: #767790;
+          font-family: monospace;`
+        },
+        type2:{
+          li:`padding: 8px;`,
+        a:`text-decoration:none;
+           display: flex;
+           flex-direction: column-reverse;
+           padding: 8px;
+          background: white;
+          box-shadow: 1px 1px 18px #989ec1;`,
+        img:`width:98px;`,
+        h5:`margin: 14px 0;
+            padding: 0;
+            color: #767790;
+            font-size: 18px;
+            font-weight: 400;
+            font-family: monospace;`,
+        p:`margin: 0;
+          padding: 0;
+          font-size: 14px;
+          font-weight: 300;
+          color: #767790;
+          font-family: monospace;`
+        },
+      type3:{
+        li:`padding: 8px;`,
+        a:`display: flex;
+          flex-direction: column;
+          justify-content: space-around;
+          text-decoration: none;
+          align-items: center;
+          text-align: center;
+          padding: 44px 8px;
+          background: white;
+          box-shadow: 1px 1px 18px #989ec1;`,
+        img:`width: 120px;
+            height: 120px;
+            border-radius: 50%;`,
+        h5:`margin: 0;
+            padding: 24px;
+            line-height: 24px;
+            color: #767790;
+            width: 100%;
+            font-size: 20px;
+            font-weight: 600;
+            font-family: monospace;`,
+        p:`margin: 0;
+          padding: 0;
+          width: 128px;
+          font-size: 14px;
+          font-weight: 300;
+          color: #767790;
+          font-family: monospace;`
+      }
+    };
+
+    const getFileName=(beforeDay=1)=>{
+      let startDate=(new Date()).getTime()-24*60*60*1000*(beforeDay);
+      let y=(new Date(startDate)).getFullYear(),
+          m=(((new Date(startDate)).getMonth().toString().length==1)?("0"+((new Date(startDate)).getMonth()+1)):(new Date(startDate)).getMonth()+1),
+          d=((new Date(startDate)).getDate().toString().length==1)?("0"+((new Date(startDate)).getDate())):((new Date(startDate)).getDate());
+      return y+"/"+m+"/"+d;
+    };
+
+    const getHeadImage=async()=>{
+      let img=getFileName(1)+".png";
+      let response=await fetch('https://shadowcz007.github.io/mix-/images/'+img);
+      let base64=await response.text();
+      //console.log(base64)
+      document.querySelector("#headImage").src=base64;
+    }
+
+    const init=async ()=>{
+      let fileName=getFileName(window.pageIndex);
+      let i=Math.round(Math.random()*2)+1;
+      let ul=document.querySelector("#news");
+      let response=await fetch('https://shadowcz007.github.io/mix-/'+fileName+'.json');
+      let data=await response.json();
+      console.log(data)
+      let items=[];
+        for (const key in data) {
+          if (data.hasOwnProperty(key)) {
+            const d = data[key];
+            let star="";
+            d.is_new?star+='⭐⭐':'';
+            d.images?star+='⭐':'';
+            d.images&&d.images.length>6?star+='⭐':'';
+            d.text?star+='⭐':'';
+            d.text&&d.text.length>1000?star+='⭐':'';
+            if(star.length>5)star="⭐⭐⭐⭐⭐";
+            d.star=star;
+            items.push(d);
+          }
+        };
+        items.sort(function(a, b) {
+          return b.star.length - a.star.length;
+        });
+
+        Array.from(items,item=>{
+          let li=layout(item,styles['type'+i]);
+            ul.appendChild(li);
+        });
+        let button=document.createElement("div");
+        button.style=`width: 100%;
+                      display: flex;
+                      justify-content: center;
+                      margin: 72px 0px;
+                      height: 44px;
+                      align-items: center;`;
+        button.innerHTML=`<div id="nextPage" style="${`height: 44px;
+                                        width: 50%;
+                                        background: #212324;
+                                        text-align: center;
+                                        line-height: 44px;
+                                        color: white;
+                                        border-radius: 44px;
+                                        font-weight: 900;
+                                        cursor: pointer;
+                                        user-select: none;
+                                        box-shadow: 3px 7px 12px 0px grey;
+                                        letter-spacing: 4px;
+                                        font-size: 20px;`}">NEXT</div>`
+        ul.appendChild(button);
+        ul.querySelector("#nextPage").addEventListener("click",(e)=>{
+          e.preventDefault();
+          button.remove();
+          window.pageIndex+=1;
+          init();
+        });
+        addLog();
+    };
+
+
+    function layout(data,style){
+      let li=document.createElement("li");
+          li.innerHTML=`<a href="${data.origin_url}" style="${style.a}">
+              <img src="${data.img}" style="${style.img}">
+              <h5 style="${style.h5}">${data.title}<br>
+                <button style="margin: 4px 0;
+                              text-align: left;
+                              border-radius: 0;
+                              border: none;
+                              font-size: 16px;
+                              font-weight: 300;
+                              outline: 1px solid #9E9E9E;
+                              font-family: monospace;">翻译</button>
+                </h5>
+              <p style="${style.p}">
+                ${data.star}
+                <br>${data.day}
+                <br>${data.origin_url.split('//')[1].split('/')[0]}</p>
+              </a>`;
+          li.style=style.li;
+          li.querySelector("button").addEventListener("click",(e)=>{
+              e.preventDefault();
+              if(e.target.className!="zh"){
+                  e.target.innerText=Array.from(new Array(data.zh.length),d=>{
+                  return " "
+                }).join("");
+                e.target.classList.add("ai_animation")
+                setTimeout(()=>{
+                  e.target.innerHTML=data.zh;
+                  e.target.classList.remove("ai_animation");
+                  e.target.classList.add("zh")
+                },1000);
+              }
+              
+          });
+      return li;
+    };
+
+    
+    getHeadImage();
+    init();
+    
+
+    function addLog(){
+      let as=document.querySelectorAll('a');
+      Array.from(as,a=>{
+        //console.log(a);
+        a.addEventListener("click",(e)=>{
+          e.preventDefault();
+          if(!a.getAttribute("is-open")){
+            window.open(a.href);  
+            a.setAttribute("is-open","1");
+          }else{
+            console.log("是否打开新页面?");
+          };
+          //console.log(a);
+           
+        });
+        let children=a.children;
+        Array.from(children,c=>{
+          c.addEventListener("click",(e)=>{
+            console.log(c);
+          });
+        });
+      })
+    }
+
+  </script>
+  
+</body>
+</html>
