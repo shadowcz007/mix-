@@ -272,10 +272,18 @@ const styles={
           });
           //console.log(moreHtml)
 
-          li.innerHTML=`<a href="${data.url}" style="${style.a}">
+          li.innerHTML=`<div style="${style.a}">
               <img src="${data.img}" style="${style.img}">
-              <h5 style="${style.h5}">${data.title}<br>
-                <button style="margin: 4px 0;
+              <h5 style="${style.h5}">${data.title}<a href="${data.url}" style="background: white;
+    color: #acacac;
+    padding: 1px 8px;
+    margin: 0 12px;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 300;
+    border: 1px solid #acacac;
+    border-radius: 2px;">原文</a><br>
+                <button style="margin: 8px 0;
                               text-align: left;
                               border-radius: 0;
                               border: none;
@@ -289,8 +297,11 @@ const styles={
                 <br>${data.day}
                 <br>${data.domain}
               </p>
-              </a>
-              <p style="background: white;padding: 12px;">${moreHtml.join("<br>")}</p>
+              </div>
+              <p style="background: #fcfcfc;
+    border: 1px solid lightgrey;
+    padding: 12px;
+    border-radius: 4px;">${moreHtml.join("<br>")}</p>
               `;
           
 
