@@ -108,7 +108,13 @@ const styles={
           font-size: 14px;
           font-weight: 300;
           color: #767790;
-          font-family: monospace;`
+          font-family: monospace;`,
+        more:`text-decoration: none;
+        display: block;
+    font-size: 14px;
+    color: black;
+    font-weight: 300;
+    margin: 8px 0;`
         },
         type2:{
           li:`padding: 8px;`,
@@ -130,7 +136,13 @@ const styles={
           font-size: 14px;
           font-weight: 300;
           color: #767790;
-          font-family: monospace;`
+          font-family: monospace;`,
+          more:`text-decoration: none;
+          display: block;
+    font-size: 14px;
+    color: black;
+    font-weight: 300;
+    margin: 8px 0;`
         },
       type3:{
         li:`padding: 8px;`,
@@ -160,7 +172,13 @@ const styles={
           font-size: 14px;
           font-weight: 300;
           color: #767790;
-          font-family: monospace;`
+          font-family: monospace;`,
+          more:`text-decoration: none;
+          display: block;
+    font-size: 14px;
+    color: black;
+    font-weight: 300;
+    margin: 8px 0;`
       }
     };
 
@@ -243,7 +261,18 @@ const styles={
 
     function layout(data,style){
       let li=document.createElement("li");
-          li.innerHTML=`<a href="${data.origin_url}" style="${style.a}">
+
+      let moreHtml=Array.from(data.more,m=>{
+            //console.log(m)
+            if(m.is_can_visited){
+                return `<a style="${style.more}" href="${m.url}">${m.title}<br>${m.domain}</a>`
+            };
+          }).filter((m) => {
+            return m;
+          });
+          //console.log(moreHtml)
+
+          li.innerHTML=`<a href="${data.url}" style="${style.a}">
               <img src="${data.img}" style="${style.img}">
               <h5 style="${style.h5}">${data.title}<br>
                 <button style="margin: 4px 0;
@@ -258,8 +287,13 @@ const styles={
               <p style="${style.p}">
                 ${data.star}
                 <br>${data.day}
-                <br>${data.origin_url.split('//')[1].split('/')[0]}</p>
-              </a>`;
+                <br>${data.domain}
+              </p>
+              </a>
+              <p style="background: white;padding: 12px;">${moreHtml.join("<br>")}</p>
+              `;
+          
+
           li.style=style.li;
           li.querySelector("button").addEventListener("click",(e)=>{
               e.preventDefault();
